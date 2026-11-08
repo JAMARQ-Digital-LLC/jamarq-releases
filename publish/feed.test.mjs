@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
+  APPS,
+  appTitle,
+  assertApp,
   assertVersion,
   assetUrl,
   electronManifest,
@@ -8,18 +11,64 @@ import {
   installerAssetName,
   manifestVersion,
   mirrorFeedTags,
+  plainManifest,
+  RELEASES_REPO,
   releaseTag,
   releasesToPrune,
   tauriManifest,
 } from "./feed.mjs";
 
-const repo = "JAMARQ-Digital-LLC/vaexcore-releases";
+const repo = "JAMARQ-Digital-LLC/jamarq-releases";
+
+test("the feed is jamarq-releases", () => {
+  assert.equal(RELEASES_REPO, repo);
+});
 
 test("each build and each feed has a tag of its own", () => {
   assert.equal(releaseTag("studio", "0.1.311"), "studio-v0.1.311");
   assert.equal(feedTag("vaexbot"), "vaexbot-latest");
+  assert.equal(releaseTag("modlist-launcher", "0.1.0"), "modlist-launcher-v0.1.0");
+});
+
+test("installer names are unchanged for the Vaexcore apps", () => {
+  assert.equal(installerAssetName("studio", "0.1.311"), "vaexcore-studio-0.1.311-x64-setup.exe");
   assert.equal(installerAssetName("pulse", "0.2.116"), "vaexcore-pulse-0.2.116-x64-setup.exe");
+  assert.equal(installerAssetName("suite", "0.1.28"), "vaexcore-suite-0.1.28-x64-setup.exe");
   assert.equal(installerAssetName("vaexbot", "0.1.188"), "vaexbot-0.1.188-x64-setup.exe");
+  assert.equal(
+    installerAssetName("modlist-launcher", "0.1.0"),
+    "modlist-launcher-0.1.0-x64-setup.exe",
+  );
+});
+
+test("only listed apps are accepted, and each has a title", () => {
+  for (const app of APPS) {
+    assertApp(app);
+    assert.ok(appTitle(app));
+  }
+  assert.equal(appTitle("modlist-launcher"), "Modlist Launcher");
+  assert.throws(() => assertApp("console"));
+});
+
+test("a plain manifest names the installer and its SHA-256", () => {
+  const sha256 = "a".repeat(64);
+  const url = assetUrl(repo, "modlist-launcher-v0.1.0", "modlist-launcher-0.1.0-x64-setup.exe");
+  const manifest = plainManifest({
+    version: "0.1.0",
+    notes: "notes",
+    url,
+    sha256,
+    publishedAt: "2026-11-08T00:00:00.000Z",
+  });
+  assert.deepEqual(manifest, {
+    version: "0.1.0",
+    notes: "notes",
+    pub_date: "2026-11-08T00:00:00.000Z",
+    url,
+    sha256,
+  });
+  assert.equal(manifestVersion("plain", JSON.stringify(manifest)), "0.1.0");
+  assert.throws(() => plainManifest({ ...manifest, sha256: "ABC" }));
 });
 
 test("no app's manifest is mirrored to another feed", () => {

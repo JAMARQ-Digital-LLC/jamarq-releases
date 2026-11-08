@@ -11,10 +11,15 @@ Nov 2026.
 
 ## Core Project Architecture & Stack
 
-- Public update feed for the Vaexcore desktop apps (ADR-0026). Installed apps
-  read `<app>-latest` without a token; the app repos stay private.
+- Public update feed for JAMARQ's desktop apps (ADR-0026). Renamed from
+  `vaexcore-releases` to `jamarq-releases` on 8 Nov 2026; GitHub redirects the
+  old name (verified: all four old `<app>-latest` URLs 301 to the new name and
+  download). Installed apps read `<app>-latest` without a token.
 - `publish/` is the composite action (`action.yml`, `publish.mjs`, `feed.mjs`)
   the Studio, Pulse, Vaexbot and suite release workflows call, pinned by SHA.
+  Apps are listed in `APP_INFO` in `feed.mjs`. Modlist Launcher (public,
+  GPL-3.0) is the first non-Vaexcore app, using kind `plain` (`release.json`
+  with url and sha256) because it has no updater.
 - `<app>-v<version>` releases hold one installer and its manifest, newest ten
   kept per app; `<app>-latest` holds only the current manifest, replaced last.
 - Verify, as Check runs it: `node --test publish/feed.test.mjs`,
@@ -29,8 +34,10 @@ Nov 2026.
 
 ## Active Task State & Known Regressions
 
-- README is stale for Vaexbot: it still lists `latest.yml` and SHA-512
-  checking. Fix after the owner decides what the frozen manifest is for.
+- README now lists Vaexbot's `latest.json` and describes the frozen
+  `latest.yml` as what pre-Tauri installs read.
+- After the rename PR merges: bump every app's `publish@` pin to its merge
+  commit and change each app's updater endpoint to `jamarq-releases`.
 - `vaexbot-latest` and `console-latest` still carry `latest.yml` frozen at
   0.1.197 (17 Oct). Owner decision open; default is keep and document.
 - Pins differ: Studio, Vaexbot and suite use `publish@d660f58`, Pulse
