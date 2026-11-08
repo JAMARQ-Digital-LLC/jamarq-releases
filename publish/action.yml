@@ -5,7 +5,7 @@ description: >-
 
 inputs:
   app:
-    description: studio, pulse, vaexbot, suite or modlist-launcher (APP_INFO in feed.mjs)
+    description: An app listed in APP_INFO in feed.mjs, such as studio or modlist-launcher
     required: true
   kind:
     description: tauri (latest.json), electron (latest.yml) or plain (release.json, for apps without an updater)

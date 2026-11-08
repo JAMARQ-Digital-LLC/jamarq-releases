@@ -39,6 +39,11 @@ test("installer names are unchanged for the Vaexcore apps", () => {
     installerAssetName("modlist-launcher", "0.1.0"),
     "modlist-launcher-0.1.0-x64-setup.exe",
   );
+  assert.equal(installerAssetName("keeplight", "0.1.0"), "keeplight-0.1.0-x64-setup.exe");
+  assert.equal(
+    installerAssetName("vaexil-mod-manager", "0.1.0"),
+    "vaexil-mod-manager-0.1.0-x64-setup.exe",
+  );
 });
 
 test("only listed apps are accepted, and each has a title", () => {
@@ -47,6 +52,8 @@ test("only listed apps are accepted, and each has a title", () => {
     assert.ok(appTitle(app));
   }
   assert.equal(appTitle("modlist-launcher"), "Modlist Launcher");
+  assert.equal(appTitle("keeplight"), "Keeplight");
+  assert.equal(appTitle("vaexil-mod-manager"), "Vaexil Mod Manager");
   assert.throws(() => assertApp("console"));
 });
 

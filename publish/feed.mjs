@@ -15,6 +15,8 @@ export const APP_INFO = {
   vaexbot: { title: "Vaexbot", asset: "vaexbot" },
   suite: { title: "vaexcore suite", asset: "vaexcore-suite" },
   "modlist-launcher": { title: "Modlist Launcher", asset: "modlist-launcher" },
+  keeplight: { title: "Keeplight", asset: "keeplight" },
+  "vaexil-mod-manager": { title: "Vaexil Mod Manager", asset: "vaexil-mod-manager" },
 };
 
 export const APPS = Object.keys(APP_INFO);
