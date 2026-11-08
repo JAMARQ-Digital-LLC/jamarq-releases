@@ -3,9 +3,23 @@
 // Kept apart from publish.mjs, which talks to GitHub, so that what an installed
 // app reads can be tested without a network or a token.
 
-export const RELEASES_REPO = "JAMARQ-Digital-LLC/vaexcore-releases";
+export const RELEASES_REPO = "JAMARQ-Digital-LLC/jamarq-releases";
 
-export const APPS = ["studio", "pulse", "vaexbot", "suite"];
+/**
+ * Every app this feed publishes: the title its releases carry, and the stem of
+ * its installer's file name. A new app is one entry here.
+ */
+export const APP_INFO = {
+  studio: { title: "vaexcore studio", asset: "vaexcore-studio" },
+  pulse: { title: "vaexcore pulse", asset: "vaexcore-pulse" },
+  vaexbot: { title: "Vaexbot", asset: "vaexbot" },
+  suite: { title: "vaexcore suite", asset: "vaexcore-suite" },
+  "modlist-launcher": { title: "Modlist Launcher", asset: "modlist-launcher" },
+};
+
+export const APPS = Object.keys(APP_INFO);
+
+export const appTitle = (app) => APP_INFO[app].title;
 
 /**
  * Feeds an app's manifest is also written to, by app.
@@ -19,10 +33,15 @@ export const FEED_MIRRORS = {};
 
 export const mirrorFeedTags = (app) => (FEED_MIRRORS[app] ?? []).map(feedTag);
 
-/** The two manifest formats, by the updater that reads them. */
+/**
+ * The manifest formats, by what reads them. `plain` is for an app with no
+ * built-in updater: it names the installer and its SHA-256, for an "update
+ * available" notice or a person checking a download.
+ */
 export const MANIFEST_NAMES = {
   tauri: "latest.json",
   electron: "latest.yml",
+  plain: "release.json",
 };
 
 export function assertApp(app) {
@@ -33,7 +52,7 @@ export function assertApp(app) {
 
 export function assertKind(kind) {
   if (!Object.hasOwn(MANIFEST_NAMES, kind)) {
-    throw new Error(`kind must be tauri or electron, got "${kind}"`);
+    throw new Error(`kind must be tauri, electron or plain, got "${kind}"`);
   }
 }
 
@@ -62,7 +81,7 @@ export const feedTag = (app) => `${app}-latest`;
  * manifest would then point at a file that does not exist.
  */
 export const installerAssetName = (app, version) =>
-  `${app === "vaexbot" ? app : `vaexcore-${app}`}-${version}-x64-setup.exe`;
+  `${APP_INFO[app].asset}-${version}-x64-setup.exe`;
 
 export const assetUrl = (repo, tag, name) =>
   `https://github.com/${repo}/releases/download/${tag}/${encodeURIComponent(name)}`;
@@ -81,6 +100,14 @@ export function tauriManifest({ version, notes, signature, url, publishedAt }) {
       "windows-x86_64": { signature: trimmed, url },
     },
   };
+}
+
+/** The release.json an app without its own updater is pointed at. */
+export function plainManifest({ version, notes, url, sha256, publishedAt }) {
+  if (!/^[0-9a-f]{64}$/.test(sha256)) {
+    throw new Error("the installer's SHA-256 must be 64 lowercase hex digits");
+  }
+  return { version, notes, pub_date: publishedAt, url, sha256 };
 }
 
 /**
@@ -121,7 +148,7 @@ export function electronManifest(text, { version, fileName, url }) {
 /** The version a manifest describes, or null if it names none. */
 export function manifestVersion(kind, text) {
   assertKind(kind);
-  if (kind === "tauri") {
+  if (kind === "tauri" || kind === "plain") {
     const version = JSON.parse(text).version;
     return typeof version === "string" ? version : null;
   }

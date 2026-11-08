@@ -1,19 +1,33 @@
-# vaexcore releases
+# jamarq releases
 
-Installers and update feeds for the vaexcore desktop apps. The source is
+Installers and update feeds for JAMARQ's desktop apps. Most apps' source is
 private; this repository holds only what an installed app downloads.
 
-Nothing here is published by hand. Each app's repository builds on every change
-to `main` that passes CI and publishes through the action in [`publish/`](publish).
+This repository was `vaexcore-releases` until 8 Nov 2026. GitHub redirects the
+old name, so copies installed before the rename keep updating; each app's next
+build reads the new address.
 
-## Update feeds
+Nothing here is published by hand. Each app's repository publishes through the
+action in [`publish/`](publish): the Vaexcore apps on every change to `main`
+that passes CI, Modlist Launcher on a version tag.
 
-| App | Feed |
-| --- | --- |
-| vaexcore studio | `https://github.com/JAMARQ-Digital-LLC/vaexcore-releases/releases/download/studio-latest/latest.json` |
-| vaexcore pulse | `https://github.com/JAMARQ-Digital-LLC/vaexcore-releases/releases/download/pulse-latest/latest.json` |
-| Vaexbot | `https://github.com/JAMARQ-Digital-LLC/vaexcore-releases/releases/download/vaexbot-latest/latest.yml` |
-| vaexcore suite | `https://github.com/JAMARQ-Digital-LLC/vaexcore-releases/releases/download/suite-latest/latest.json` |
+## Apps
+
+| App | Install | Feed |
+| --- | --- | --- |
+| vaexcore studio | `vaexcore-studio-<version>-x64-setup.exe` from `studio-v*` | `https://github.com/JAMARQ-Digital-LLC/jamarq-releases/releases/download/studio-latest/latest.json` |
+| vaexcore pulse | `vaexcore-pulse-<version>-x64-setup.exe` from `pulse-v*` | `https://github.com/JAMARQ-Digital-LLC/jamarq-releases/releases/download/pulse-latest/latest.json` |
+| Vaexbot | `vaexbot-<version>-x64-setup.exe` from `vaexbot-v*` | `https://github.com/JAMARQ-Digital-LLC/jamarq-releases/releases/download/vaexbot-latest/latest.json` |
+| vaexcore suite | `vaexcore-suite-<version>-x64-setup.exe` from `suite-v*` | `https://github.com/JAMARQ-Digital-LLC/jamarq-releases/releases/download/suite-latest/latest.json` |
+| Modlist Launcher | `modlist-launcher-<version>-x64-setup.exe` from `modlist-launcher-v*` | `https://github.com/JAMARQ-Digital-LLC/jamarq-releases/releases/download/modlist-launcher-latest/release.json` |
+
+To install an app for the first time, download the newest installer from its
+`<app>-v*` release. The Tauri apps update themselves from then on. Modlist
+Launcher has no updater; its `release.json` names the newest installer and its
+SHA-256.
+
+Adding an app is one entry in `APP_INFO` in [`publish/feed.mjs`](publish/feed.mjs),
+then a release workflow in that app's repository that calls the action.
 
 ## Releases
 
@@ -22,10 +36,6 @@ to `main` that passes CI and publishes through the action in [`publish/`](publis
 - `<app>-latest`: the manifest installed copies read, and nothing else. It is
   replaced last when a build is published, so it never names an installer that
   has not finished uploading.
-
-To install an app for the first time, download the newest
-`vaexcore-<app>-<version>-x64-setup.exe` (Vaexbot: `vaexbot-<version>-x64-setup.exe`)
-from its `<app>-v*` release. From then on it updates itself.
 
 Vaexbot was vaexcore console until 2026-10-01. Until 2026-10-05 its manifest
 was also written to `console-latest`, which installs from before the rename
@@ -37,15 +47,17 @@ would go after a future rename.
 
 ## Versions
 
-`MAJOR.MINOR` comes from the app's own version field; `PATCH` is the number of
-commits on `main` that changed the app. Every published build is therefore
-newer than the last, and a change to docs or CI alone does not publish anything.
+For the Vaexcore apps, `MAJOR.MINOR` comes from the app's own version field and
+`PATCH` is the number of commits on `main` that changed the app. Every published
+build is therefore newer than the last, and a change to docs or CI alone does
+not publish anything. Modlist Launcher's version is its release tag.
 
 ## Signing
 
-Tauri updates (studio, pulse, suite) are signed with the suite's minisign key,
-and the apps refuse an update that does not verify. Vaexbot's updates are checked
-against the SHA-512 in its manifest.
+Tauri updates (studio, pulse, Vaexbot, suite) are signed, and the apps refuse an
+update that does not verify. Vaexbot moved to Tauri on 2 Nov 2026;
+`vaexbot-latest` still carries the frozen `latest.yml` that pre-Tauri installs
+read. Modlist Launcher's `release.json` carries the installer's SHA-256.
 
 The installers are not yet Authenticode-signed. Windows may warn before running
 one downloaded from here, and Smart App Control may block it.
@@ -59,6 +71,8 @@ downgrade anyone.
 
 ## License
 
-The installers and tooling here are proprietary; see [LICENSE](LICENSE). The
-repository is public only so installed apps can read their update feeds without a
-token.
+The Vaexcore installers and the tooling here are proprietary; see
+[LICENSE](LICENSE). An app released under its own open-source license keeps
+that license: Modlist Launcher is GPL-3.0, with its source at
+<https://github.com/jmars319/modlist-launcher>. The repository is public only so
+installed apps can read their update feeds without a token.

@@ -9,6 +9,7 @@
 // Every value arrives in the environment, set by action.yml.
 
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import {
   appendFileSync,
   copyFileSync,
@@ -80,7 +81,7 @@ const summary = (line) => {
 function main() {
   if (!input("GH_TOKEN", { required: false })) {
     throw new Error(
-      "the token is empty: set VAEXCORE_RELEASES_TOKEN for this repository",
+      "the token is empty: set the releases token secret (VAEXCORE_RELEASES_TOKEN) for this repository",
     );
   }
   const repo = input("RELEASES_REPO", { required: false }) || feed.RELEASES_REPO;
@@ -112,8 +113,9 @@ function main() {
   if (!existsSync(installer)) {
     throw new Error(`the installer is not at ${installer}`);
   }
-  const notes = input("NOTES", { required: false }) || `vaexcore ${app} ${version}`;
-  const stage = mkdtempSync(join(tmpdir(), "vaexcore-release-"));
+  const title = feed.appTitle(app);
+  const notes = input("NOTES", { required: false }) || `${title} ${version}`;
+  const stage = mkdtempSync(join(tmpdir(), "jamarq-release-"));
   const assetName = feed.installerAssetName(app, version);
   const url = feed.assetUrl(repo, tag, assetName);
   const assets = [join(stage, assetName)];
@@ -127,6 +129,15 @@ function main() {
       notes,
       signature,
       url,
+      publishedAt: new Date().toISOString(),
+    });
+    manifest = `${JSON.stringify(document, null, 2)}\n`;
+  } else if (kind === "plain") {
+    const document = feed.plainManifest({
+      version,
+      notes,
+      url,
+      sha256: createHash("sha256").update(readFileSync(installer)).digest("hex"),
       publishedAt: new Date().toISOString(),
     });
     manifest = `${JSON.stringify(document, null, 2)}\n`;
@@ -155,7 +166,7 @@ function main() {
     gh([
       "release", "create", tag, ...assets,
       "--repo", repo,
-      "--title", `vaexcore ${app} ${version}`,
+      "--title", `${title} ${version}`,
       "--notes", notes,
       "--latest=false",
     ]);
@@ -169,8 +180,8 @@ function main() {
       gh([
         "release", "create", tag, manifestPath,
         "--repo", repo,
-        "--title", `vaexcore ${app} update feed`,
-        "--notes", `The manifest installed copies of vaexcore ${app} read. Installers are in the ${app}-v* releases.`,
+        "--title", `${title} update feed`,
+        "--notes", `The manifest installed copies of ${title} read. Installers are in the ${app}-v* releases.`,
         "--latest=false",
       ]);
     }
@@ -186,7 +197,7 @@ function main() {
   }
 
   output("published", "true");
-  summary(`Published vaexcore ${app} ${version} (was ${feedVersion ?? "nothing"}).`);
+  summary(`Published ${title} ${version} (was ${feedVersion ?? "nothing"}).`);
   summary(`- Installer: ${url}`);
   if (pruned.length > 0) {
     summary(`- Removed ${pruned.join(", ")}`);

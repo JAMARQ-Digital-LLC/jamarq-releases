@@ -1,20 +1,20 @@
-name: Publish a vaexcore update
+name: Publish an app release
 description: >-
-  Publish an installer to vaexcore-releases and point the app's update feed at
+  Publish an installer to jamarq-releases and point the app's update feed at
   it. With check-only, report whether the feed already offers the version.
 
 inputs:
   app:
-    description: studio, pulse, vaexbot or suite
+    description: studio, pulse, vaexbot, suite or modlist-launcher (APP_INFO in feed.mjs)
     required: true
   kind:
-    description: tauri (latest.json) or electron (latest.yml)
+    description: tauri (latest.json), electron (latest.yml) or plain (release.json, for apps without an updater)
     required: true
   version:
     description: MAJOR.MINOR.PATCH
     required: true
   token:
-    description: A token that can write releases in vaexcore-releases
+    description: A token that can write releases in jamarq-releases
     required: true
   check-only:
     description: Report whether this version is already published, and publish nothing
