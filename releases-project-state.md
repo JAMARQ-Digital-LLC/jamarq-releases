@@ -16,10 +16,11 @@ Nov 2026.
   old name (verified: all four old `<app>-latest` URLs 301 to the new name and
   download). Installed apps read `<app>-latest` without a token.
 - `publish/` is the composite action (`action.yml`, `publish.mjs`, `feed.mjs`)
-  the Studio, Pulse, Vaexbot and suite release workflows call, pinned by SHA.
-  Apps are listed in `APP_INFO` in `feed.mjs`. Modlist Launcher (public,
-  GPL-3.0) is the first non-Vaexcore app, using kind `plain` (`release.json`
-  with url and sha256) because it has no updater.
+  the app repos call, pinned by SHA. Apps are listed in `APP_INFO` in
+  `feed.mjs`. Modlist Launcher, Keeplight and Vaexil Mod Manager (public,
+  GPL-3.0, no updater) use kind `plain` (`release.json` with url and sha256),
+  published by each repo's `publish-feed.yml` when a reviewed draft release
+  is published.
 - `<app>-v<version>` releases hold one installer and its manifest, newest ten
   kept per app; `<app>-latest` holds only the current manifest, replaced last.
 - Verify, as Check runs it: `node --test publish/feed.test.mjs`,
@@ -27,21 +28,21 @@ Nov 2026.
 
 ## Current Structural Milestones / Active Feature Goals
 
-- 4 Nov 2026: all four feeds current (Studio 0.1.331, Pulse 0.2.144, Vaexbot
-  0.1.234, suite 0.1.27), ten versioned releases each. Check green on
-  `498acf1`.
-- Vaexbot moved to Tauri on 2 Nov: it now publishes a signed `latest.json`.
+- 8 Nov 2026: all four Vaexcore feeds published on the new name the same day
+  (Studio 0.1.335, Pulse 0.2.147, Vaexbot 0.1.239, suite 0.1.29), ten
+  versioned releases each. Check green on `f07ce6c`.
+- Pins: Studio, Pulse, Vaexbot and suite `publish@eaa8917` (#11); Modlist
+  Launcher, Keeplight and Vaexil Mod Manager `publish@f07ce6c` (#12). Same
+  publish code; #12 only adds two `APP_INFO` entries.
+- Vaexbot moved to Tauri on 2 Nov: it publishes a signed `latest.json`.
 
 ## Active Task State & Known Regressions
 
-- README now lists Vaexbot's `latest.json` and describes the frozen
-  `latest.yml` as what pre-Tauri installs read.
-- After the rename PR merges: bump every app's `publish@` pin to its merge
-  commit and change each app's updater endpoint to `jamarq-releases`.
+- The three `plain` apps have no published release yet, so the `plain` path
+  has not run end to end. Each repo needs the `VAEXCORE_RELEASES_TOKEN`
+  secret before its first published release.
 - `vaexbot-latest` and `console-latest` still carry `latest.yml` frozen at
-  0.1.197 (17 Oct). Owner decision open; default is keep and document.
-- Pins differ: Studio, Vaexbot and suite use `publish@d660f58`, Pulse
-  `publish@56832e0`. Same `publish/` code; align on the next action change.
+  0.1.197 (17 Oct). Default applied: keep, documented in the README.
 
 ## Temporary Logic Rules & Constraints
 
@@ -49,6 +50,8 @@ Nov 2026.
 - Nothing is published by hand. A rollback copies an old manifest into
   `<app>-latest`; it stops updates, it never downgrades.
 - A change to `publish/` must be rolled out to every app repo's pin together.
+- Never create a repository named `vaexcore-releases`: it would break the
+  redirect that installs from before 8 Nov still rely on.
 
 ## Context Compaction Checklist
 
