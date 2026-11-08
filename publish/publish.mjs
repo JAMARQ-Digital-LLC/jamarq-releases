@@ -81,7 +81,7 @@ const summary = (line) => {
 function main() {
   if (!input("GH_TOKEN", { required: false })) {
     throw new Error(
-      "the token is empty: set the releases token secret (VAEXCORE_RELEASES_TOKEN) for this repository",
+      "the token is empty: set the releases token secret (JAMARQ_RELEASES_TOKEN) for this repository",
     );
   }
   const repo = input("RELEASES_REPO", { required: false }) || feed.RELEASES_REPO;

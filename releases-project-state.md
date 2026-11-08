@@ -39,7 +39,7 @@ Nov 2026.
 ## Active Task State & Known Regressions
 
 - The three `plain` apps have no published release yet, so the `plain` path
-  has not run end to end. Each repo needs the `VAEXCORE_RELEASES_TOKEN`
+  has not run end to end. Each repo needs the `JAMARQ_RELEASES_TOKEN`
   secret before its first published release.
 - `vaexbot-latest` and `console-latest` still carry `latest.yml` frozen at
   0.1.197 (17 Oct). Default applied: keep, documented in the README.
