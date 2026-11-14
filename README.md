@@ -25,9 +25,11 @@ reviewed draft release is published.
 | Vaexil Mod Manager | `vaexil-mod-manager-<version>-x64-setup.exe` from `vaexil-mod-manager-v*` | `https://github.com/JAMARQ-Digital-LLC/jamarq-releases/releases/download/vaexil-mod-manager-latest/release.json` |
 
 To install an app for the first time, download the newest installer from its
-`<app>-v*` release. The Tauri apps update themselves from then on. Modlist
-Launcher, Keeplight and Vaexil Mod Manager have no updater; each `release.json`
-names the newest installer and its SHA-256.
+`<app>-v*` release. The Tauri apps update themselves from then on. So does
+Vaexil Mod Manager, from 0.2.0: once the user confirms, it downloads the
+installer its `release.json` names, checks it against that SHA-256, and runs it
+silently. Modlist Launcher and Keeplight only say when a newer release is out.
+Each `release.json` names the newest installer and its SHA-256.
 
 Adding an app is one entry in `APP_INFO` in [`publish/feed.mjs`](publish/feed.mjs),
 then a release workflow in that app's repository that calls the action.
