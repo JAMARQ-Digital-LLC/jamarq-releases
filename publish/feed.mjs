@@ -7,13 +7,13 @@ export const RELEASES_REPO = "JAMARQ-Digital-LLC/jamarq-releases";
 
 /**
  * Every app this feed publishes: the title its releases carry, and the stem of
- * its installer's file name. A new app is one entry here.
+ * its installer's file name. A new app is one entry here. The Vaexcore suite
+ * control center was removed on 2026-11-14, when the owner retired it.
  */
 export const APP_INFO = {
   studio: { title: "vaexcore studio", asset: "vaexcore-studio" },
   pulse: { title: "vaexcore pulse", asset: "vaexcore-pulse" },
   vaexbot: { title: "Vaexbot", asset: "vaexbot" },
-  suite: { title: "vaexcore suite", asset: "vaexcore-suite" },
   "modlist-launcher": { title: "Modlist Launcher", asset: "modlist-launcher" },
   keeplight: { title: "Keeplight", asset: "keeplight" },
   "vaexil-mod-manager": { title: "Vaexil Mod Manager", asset: "vaexil-mod-manager" },

@@ -2,8 +2,8 @@
 
 Plan artifact: https://claude.ai/artifact/WJhyryE4zxanuTfKqBk1d5 ("The Releases
 Plan", the owner-facing page for this feed; update it in place, never publish a
-second one). The suite as a whole is on "The Vaexcore Plan",
-https://claude.ai/artifact/WY3T4bscD2kM5rPxjs81Gd.
+second one). The Vaexcore suite repo and its control center were retired on 14 Nov
+2026 (owner); "The Vaexcore Plan" page is marked retired.
 
 Working state across sessions for this repo. Durable detail lives in
 `README.md` and `publish/`; this file holds what is true right now. Created 4
@@ -43,6 +43,10 @@ Nov 2026.
   secret before its first published release.
 - `vaexbot-latest` and `console-latest` still carry `latest.yml` frozen at
   0.1.197 (17 Oct). Default applied: keep, documented in the README.
+- 14 Nov 2026: the suite control center is out of `APP_INFO`. Its 11
+  `suite-*` releases (`suite-latest` and ten versions) are still published
+  until the owner approves deleting them. Installed copies keep their last
+  build and find no newer one.
 
 ## Temporary Logic Rules & Constraints
 

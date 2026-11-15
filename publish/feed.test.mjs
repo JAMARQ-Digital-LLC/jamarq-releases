@@ -30,10 +30,13 @@ test("each build and each feed has a tag of its own", () => {
   assert.equal(releaseTag("modlist-launcher", "0.1.0"), "modlist-launcher-v0.1.0");
 });
 
+test("the retired suite control center is no longer published", () => {
+  assert.equal(APPS.includes("suite"), false);
+});
+
 test("installer names are unchanged for the Vaexcore apps", () => {
   assert.equal(installerAssetName("studio", "0.1.311"), "vaexcore-studio-0.1.311-x64-setup.exe");
   assert.equal(installerAssetName("pulse", "0.2.116"), "vaexcore-pulse-0.2.116-x64-setup.exe");
-  assert.equal(installerAssetName("suite", "0.1.28"), "vaexcore-suite-0.1.28-x64-setup.exe");
   assert.equal(installerAssetName("vaexbot", "0.1.188"), "vaexbot-0.1.188-x64-setup.exe");
   assert.equal(
     installerAssetName("modlist-launcher", "0.1.0"),

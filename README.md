@@ -19,7 +19,6 @@ reviewed draft release is published.
 | vaexcore studio | `vaexcore-studio-<version>-x64-setup.exe` from `studio-v*` | `https://github.com/JAMARQ-Digital-LLC/jamarq-releases/releases/download/studio-latest/latest.json` |
 | vaexcore pulse | `vaexcore-pulse-<version>-x64-setup.exe` from `pulse-v*` | `https://github.com/JAMARQ-Digital-LLC/jamarq-releases/releases/download/pulse-latest/latest.json` |
 | Vaexbot | `vaexbot-<version>-x64-setup.exe` from `vaexbot-v*` | `https://github.com/JAMARQ-Digital-LLC/jamarq-releases/releases/download/vaexbot-latest/latest.json` |
-| vaexcore suite | `vaexcore-suite-<version>-x64-setup.exe` from `suite-v*` | `https://github.com/JAMARQ-Digital-LLC/jamarq-releases/releases/download/suite-latest/latest.json` |
 | Modlist Launcher | `modlist-launcher-<version>-x64-setup.exe` from `modlist-launcher-v*` | `https://github.com/JAMARQ-Digital-LLC/jamarq-releases/releases/download/modlist-launcher-latest/release.json` |
 | Keeplight | `keeplight-<version>-x64-setup.exe` from `keeplight-v*` | `https://github.com/JAMARQ-Digital-LLC/jamarq-releases/releases/download/keeplight-latest/release.json` |
 | Vaexil Mod Manager | `vaexil-mod-manager-<version>-x64-setup.exe` from `vaexil-mod-manager-v*` | `https://github.com/JAMARQ-Digital-LLC/jamarq-releases/releases/download/vaexil-mod-manager-latest/release.json` |
@@ -59,7 +58,7 @@ not publish anything. For the other apps, the version is the release tag.
 
 ## Signing
 
-Tauri updates (studio, pulse, Vaexbot, suite) are signed, and the apps refuse an
+Tauri updates (studio, pulse, Vaexbot) are signed, and the apps refuse an
 update that does not verify. Vaexbot moved to Tauri on 2 Nov 2026;
 `vaexbot-latest` still carries the frozen `latest.yml` that pre-Tauri installs
 read. The other apps' `release.json` carries the installer's SHA-256.
