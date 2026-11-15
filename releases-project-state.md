@@ -44,8 +44,8 @@ Nov 2026.
 - `vaexbot-latest` and `console-latest` still carry `latest.yml` frozen at
   0.1.197 (17 Oct). Default applied: keep, documented in the README.
 - 14 Nov 2026: the suite control center is out of `APP_INFO`. Its 11
-  `suite-*` releases (`suite-latest` and ten versions) are still published
-  until the owner approves deleting them. Installed copies keep their last
+  `suite-*` releases (`suite-latest` and ten versions) are kept by owner
+  decision (14 Nov); nothing publishes to them. Installed copies keep their last
   build and find no newer one.
 
 ## Temporary Logic Rules & Constraints

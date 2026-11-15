@@ -23,6 +23,10 @@ reviewed draft release is published.
 | Keeplight | `keeplight-<version>-x64-setup.exe` from `keeplight-v*` | `https://github.com/JAMARQ-Digital-LLC/jamarq-releases/releases/download/keeplight-latest/release.json` |
 | Vaexil Mod Manager | `vaexil-mod-manager-<version>-x64-setup.exe` from `vaexil-mod-manager-v*` | `https://github.com/JAMARQ-Digital-LLC/jamarq-releases/releases/download/vaexil-mod-manager-latest/release.json` |
 
+The vaexcore suite control center was retired on 14 Nov 2026. Its `suite-*`
+releases (`suite-latest` and ten versions) are kept by owner decision, and
+nothing publishes to them.
+
 To install an app for the first time, download the newest installer from its
 `<app>-v*` release. The Tauri apps update themselves from then on. So does
 Vaexil Mod Manager, from 0.2.0: once the user confirms, it downloads the
