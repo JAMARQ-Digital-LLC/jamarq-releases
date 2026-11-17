@@ -8,11 +8,130 @@ on:
 permissions:
   contents: read
 
+# Docs-only pull requests skip `test` (the fleet pattern in agentic-instructions,
+# docs/github-actions-maintenance.md, "Docs-only pull requests"). The workflow
+# always triggers, so the required `test` check reports on every PR: skipped by
+# its `if` counts as passing, and a failed `changes` job makes it run and fail.
 jobs:
+  changes:
+    name: Changes and secret scan
+    # Not a required check. Public repository: hosted runners only.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      code: ${{ steps.classify.outputs.code }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # The classification and Gitleaks both read a commit range.
+          fetch-depth: 0
+
+      - name: Classify changed files
+        id: classify
+        shell: bash
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          # Only a pull request can be docs-only.
+          if [[ "${GITHUB_EVENT_NAME}" != "pull_request" ]]; then
+            echo "Event ${GITHUB_EVENT_NAME}: running everything."
+            echo "code=true" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          # Documentation is Markdown at the root or under docs/, and the
+          # licence. Nothing in publish/ or the workflows reads them.
+          is_docs() {
+            case "$1" in
+              .github/*) return 1 ;;
+              docs/*.md) return 0 ;;
+              */*) return 1 ;;
+              *.md|LICENSE|LICENSE.*) return 0 ;;
+              *) return 1 ;;
+            esac
+          }
+
+          base="$(git merge-base "${PR_BASE_SHA}" "${PR_HEAD_SHA}")"
+          # --no-renames lists both sides of a rename.
+          files="$(git diff --name-only --no-renames "${base}" "${PR_HEAD_SHA}")"
+
+          code=false
+          count=0
+          while IFS= read -r file; do
+            [[ -z "${file}" ]] && continue
+            count=$((count + 1))
+            if is_docs "${file}"; then
+              echo "docs  ${file}"
+            else
+              echo "code  ${file}"
+              code=true
+            fi
+          done <<< "${files}"
+
+          if [[ "${count}" -eq 0 ]]; then
+            echo "No changed files found: running everything."
+            code=true
+          fi
+
+          echo "code=${code}" >> "${GITHUB_OUTPUT}"
+          if [[ "${code}" == "true" ]]; then
+            echo "Code changed: every job runs."
+          else
+            echo "Docs only: test is skipped."
+          fi
+
+      # Pinned and checksum-verified, as in the app repositories.
+      - name: Install Gitleaks
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="8.30.1"
+          archive="gitleaks_${version}_linux_x64.tar.gz"
+          expected_sha="551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
+          bin="${RUNNER_TEMP}/gitleaks-bin"
+          mkdir -p "${bin}"
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${version}/${archive}" -o "${RUNNER_TEMP}/${archive}"
+          echo "${expected_sha}  ${RUNNER_TEMP}/${archive}" | sha256sum -c -
+          tar -xzf "${RUNNER_TEMP}/${archive}" -C "${bin}" gitleaks
+          echo "${bin}" >> "${GITHUB_PATH}"
+
+      - name: Scan changed commits
+        shell: bash
+        env:
+          PUSH_BEFORE: ${{ github.event.before }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          zero="0000000000000000000000000000000000000000"
+          case "${GITHUB_EVENT_NAME}" in
+            pull_request) base="${PR_BASE_SHA}" ;;
+            push) base="${PUSH_BEFORE}" ;;
+            *) base="" ;;
+          esac
+          if [[ -n "${base}" && "${base}" != "${zero}" ]]; then
+            range="${base}..${GITHUB_SHA}"
+          else
+            range="${GITHUB_SHA}^..${GITHUB_SHA}"
+          fi
+          echo "Scanning commits: ${range}"
+          gitleaks git --log-opts="${range}" --redact=100 --exit-code=1 --no-banner --no-color
+
   test:
+    # Required check: keep the job id `test`.
+    needs: changes
+    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.code != 'false') }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Stop if the changes job failed
+        if: ${{ needs.changes.result != 'success' }}
+        run: |
+          echo "::error::The changes job (classification and secret scan) did not succeed: ${{ needs.changes.result }}. Fix or rerun it."
+          exit 1
+
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
