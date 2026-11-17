@@ -86,3 +86,5 @@ with source at <https://github.com/jmars319/modlist-launcher>,
 <https://github.com/jmars319/keeplight> and
 <https://github.com/jmars319/vaexil-mod-manager>. The repository is public only so
 installed apps can read their update feeds without a token.
+
+<!-- docs-only CI proof, not for merge -->
