@@ -25,6 +25,11 @@ Nov 2026.
   kept per app; `<app>-latest` holds only the current manifest, replaced last.
 - Verify, as Check runs it: `node --test publish/feed.test.mjs`,
   `node --check publish/publish.mjs`, `actionlint`.
+- Check has two jobs (17 Nov 2026): `changes` ("Changes and secret scan":
+  Gitleaks over the pushed commits, then classifies the PR's files) and the
+  required `test`. A PR that touches only root Markdown, `docs/*.md` or
+  `LICENSE*` skips `test`; anything else, every push to main, and a failed
+  `changes` job run it. Never add `paths:` filters to `check.yml`.
 
 ## Current Structural Milestones / Active Feature Goals
 
