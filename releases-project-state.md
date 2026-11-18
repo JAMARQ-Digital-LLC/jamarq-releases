@@ -43,6 +43,7 @@ Nov 2026.
 
 ## Active Task State & Known Regressions
 
+- **2026-11-18: Keeplight, Vaexil Mod Manager and Modlist Launcher moved from `jmars319` into `JAMARQ-Digital-LLC`** (owner's decision, so Claude sessions on the PCs need one org-owned fine-grained token). The README's source links now name the org. Feeds and installers here are unaffected; each app's `JAMARQ_RELEASES_TOKEN` secret moved with its repository.
 - The three `plain` apps have no published release yet, so the `plain` path
   has not run end to end. Each repo needs the `JAMARQ_RELEASES_TOKEN`
   secret before its first published release.

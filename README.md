@@ -82,7 +82,7 @@ downgrade anyone.
 The Vaexcore installers and the tooling here are proprietary; see
 [LICENSE](LICENSE). An app released under its own open-source license keeps
 that license: Modlist Launcher, Keeplight and Vaexil Mod Manager are GPL-3.0,
-with source at <https://github.com/jmars319/modlist-launcher>,
-<https://github.com/jmars319/keeplight> and
-<https://github.com/jmars319/vaexil-mod-manager>. The repository is public only so
+with source at <https://github.com/JAMARQ-Digital-LLC/modlist-launcher>,
+<https://github.com/JAMARQ-Digital-LLC/keeplight> and
+<https://github.com/JAMARQ-Digital-LLC/vaexil-mod-manager>. The repository is public only so
 installed apps can read their update feeds without a token.
