@@ -33,26 +33,57 @@ Nov 2026.
 
 ## Current Structural Milestones / Active Feature Goals
 
-- 8 Nov 2026: all four Vaexcore feeds published on the new name the same day
-  (Studio 0.1.335, Pulse 0.2.147, Vaexbot 0.1.239, suite 0.1.29), ten
-  versioned releases each. Check green on `f07ce6c`.
-- Pins: Studio, Pulse, Vaexbot and suite `publish@eaa8917` (#11); Modlist
-  Launcher, Keeplight and Vaexil Mod Manager `publish@f07ce6c` (#12). Same
-  publish code; #12 only adds two `APP_INFO` entries.
+- Feeds, checked first-hand 18 Nov 2026 (manifest `version` and `pub_date`):
+  Studio 0.1.356 (18 Nov), Pulse 0.2.178 (18 Nov), Vaexbot 0.1.255 (16 Nov),
+  Keeplight 0.2.0 (14 Nov), Vaexil Mod Manager 0.2.0 (14 Nov). Both `plain`
+  installers match their `release.json` SHA-256. Modlist Launcher: no tag, no
+  release, `modlist-launcher-latest` answers 404. Suite frozen at 0.1.34
+  (15 Nov 01:06 UTC, the last build before #16).
+- Versioned releases: Studio, Pulse, Vaexbot and suite 10 each; Keeplight and
+  Vaexil Mod Manager 1 each.
+- Pins, 18 Nov: all six calling repos (Studio, Pulse, Vaexbot, Keeplight,
+  Vaexil Mod Manager, Modlist Launcher) pin `publish@c3a6502` (#14). The only
+  later `publish/` change is #16, which drops the suite from `APP_INFO`; no
+  caller needs it, so the pins are level.
+- Every caller passes `secrets.JAMARQ_RELEASES_TOKEN`, and all six repos have
+  that secret (names checked 18 Nov). No workflow, feed URL or app updater
+  constant names `jmars319`.
+- Release cadence (decision log 2026-11-18): Studio, Pulse and Vaexbot release
+  nightly until each has its `main-build.yml`, then only on a dispatch the owner
+  asks for. None has `main-build.yml` yet (18 Nov). The three Slint apps
+  publish only when the owner publishes a reviewed draft.
 - Vaexbot moved to Tauri on 2 Nov: it publishes a signed `latest.json`.
 
 ## Active Task State & Known Regressions
 
-- **2026-11-18: Keeplight, Vaexil Mod Manager and Modlist Launcher moved from `jmars319` into `JAMARQ-Digital-LLC`** (owner's decision, so Claude sessions on the PCs need one org-owned fine-grained token). The README's source links now name the org. Feeds and installers here are unaffected; each app's `JAMARQ_RELEASES_TOKEN` secret moved with its repository.
-- The three `plain` apps have no published release yet, so the `plain` path
-  has not run end to end. Each repo needs the `JAMARQ_RELEASES_TOKEN`
-  secret before its first published release.
-- `vaexbot-latest` and `console-latest` still carry `latest.yml` frozen at
-  0.1.197 (17 Oct). Default applied: keep, documented in the README.
+- **2026-11-18: Keeplight, Vaexil Mod Manager and Modlist Launcher moved from
+  `jmars319` into `JAMARQ-Digital-LLC`** (owner). README source links name the
+  org (#20). Feeds and installers here are unaffected; each repo kept its
+  `JAMARQ_RELEASES_TOKEN` secret.
+- The `plain` path has run end to end twice: Keeplight 0.2.0 and Vaexil Mod
+  Manager 0.2.0 (14 Nov, both `publish-feed.yml` runs green).
+- The 0.2.0 `release.json` notes link `github.com/jmars319/<app>/releases/...`,
+  written before the move. GitHub redirects those links to the org (checked 18
+  Nov), and the workflows build the link from `github.event.release.html_url`,
+  so the next release names the org. Nothing to change.
+- `vaexbot-latest/latest.yml` and `console-latest/latest.yml` stay frozen at
+  0.1.197 (17 Oct) by default, documented in the README. Their URL names
+  `JAMARQ-Digital-LLC/vaexcore-releases`, which still redirects (200 after two
+  redirects, 18 Nov).
 - 14 Nov 2026: the suite control center is out of `APP_INFO`. Its 11
-  `suite-*` releases (`suite-latest` and ten versions) are kept by owner
-  decision (14 Nov); nothing publishes to them. Installed copies keep their last
-  build and find no newer one.
+  `suite-*` releases are kept by owner decision (14 Nov); nothing publishes to
+  them, and `vaexcore-suite` is archived.
+
+### Next Up
+
+- **A. Modlist Launcher's first release** (owner). The secret and
+  `publish-feed.yml` are in place. Push its version tag, review the draft
+  release, publish it. Done when `modlist-launcher-latest/release.json`
+  answers 200 and its SHA-256 matches the installer.
+- **B. This repo's registry entry is stale** (agentic-instructions). Its
+  `deployModel` and notes name only the Vaexcore apps and Modlist Launcher and
+  list "Console and Suite" as callers. Done when it names the six callers and
+  the retired suite.
 
 ## Temporary Logic Rules & Constraints
 
