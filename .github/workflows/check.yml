@@ -94,12 +94,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Copy a pinned file from the runner's release cache when it has one, else
+          # download it with a time limit. The sha256 check below still applies.
+          fetch_release() {
+            local cached="/opt/jamarq-tools/releases/${1#https://}"
+            if [ -f "${cached}" ]; then cp "${cached}" "$2"; return; fi
+            curl -sSfL --connect-timeout 20 --max-time 180 --retry 4 --retry-all-errors --retry-delay 5 "$1" -o "$2"
+          }
           version="8.30.1"
           archive="gitleaks_${version}_linux_x64.tar.gz"
           expected_sha="551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
           bin="${RUNNER_TEMP}/gitleaks-bin"
           mkdir -p "${bin}"
-          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${version}/${archive}" -o "${RUNNER_TEMP}/${archive}"
+          fetch_release "https://github.com/gitleaks/gitleaks/releases/download/v${version}/${archive}" "${RUNNER_TEMP}/${archive}"
           echo "${expected_sha}  ${RUNNER_TEMP}/${archive}" | sha256sum -c -
           tar -xzf "${RUNNER_TEMP}/${archive}" -C "${bin}" gitleaks
           echo "${bin}" >> "${GITHUB_PATH}"
@@ -150,9 +157,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Copy a pinned file from the runner's release cache when it has one, else
+          # download it with a time limit. The sha256 check below still applies.
+          fetch_release() {
+            local cached="/opt/jamarq-tools/releases/${1#https://}"
+            if [ -f "${cached}" ]; then cp "${cached}" "$2"; return; fi
+            curl -sSfL --connect-timeout 20 --max-time 180 --retry 4 --retry-all-errors --retry-delay 5 "$1" -o "$2"
+          }
           version="1.7.12"
           sha="8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8"
-          curl -sSfL "https://github.com/rhysd/actionlint/releases/download/v${version}/actionlint_${version}_linux_amd64.tar.gz" -o "${RUNNER_TEMP}/actionlint.tar.gz"
+          fetch_release "https://github.com/rhysd/actionlint/releases/download/v${version}/actionlint_${version}_linux_amd64.tar.gz" "${RUNNER_TEMP}/actionlint.tar.gz"
           echo "${sha}  ${RUNNER_TEMP}/actionlint.tar.gz" | sha256sum -c -
           tar -xzf "${RUNNER_TEMP}/actionlint.tar.gz" -C "${RUNNER_TEMP}" actionlint
           "${RUNNER_TEMP}/actionlint"
