@@ -95,11 +95,11 @@ jobs:
         run: |
           set -euo pipefail
           # Copy a pinned file from the runner's release cache when it has one, else
-          # download it with a time limit. The sha256 check below still applies.
+          # download it, giving up on a transfer under 100 KB/s for 20 s or past 2 min. The sha256 check below still applies.
           fetch_release() {
             local cached="/opt/jamarq-tools/releases/${1#https://}"
             if [ -f "${cached}" ]; then cp "${cached}" "$2"; return; fi
-            curl -sSfL --connect-timeout 20 --max-time 180 --retry 4 --retry-all-errors --retry-delay 5 "$1" -o "$2"
+            curl -sSfL --connect-timeout 15 --max-time 120 --speed-limit 102400 --speed-time 20 --retry 2 --retry-all-errors --retry-delay 3 "$1" -o "$2"
           }
           version="8.30.1"
           archive="gitleaks_${version}_linux_x64.tar.gz"
@@ -158,11 +158,11 @@ jobs:
         run: |
           set -euo pipefail
           # Copy a pinned file from the runner's release cache when it has one, else
-          # download it with a time limit. The sha256 check below still applies.
+          # download it, giving up on a transfer under 100 KB/s for 20 s or past 2 min. The sha256 check below still applies.
           fetch_release() {
             local cached="/opt/jamarq-tools/releases/${1#https://}"
             if [ -f "${cached}" ]; then cp "${cached}" "$2"; return; fi
-            curl -sSfL --connect-timeout 20 --max-time 180 --retry 4 --retry-all-errors --retry-delay 5 "$1" -o "$2"
+            curl -sSfL --connect-timeout 15 --max-time 120 --speed-limit 102400 --speed-time 20 --retry 2 --retry-all-errors --retry-delay 3 "$1" -o "$2"
           }
           version="1.7.12"
           sha="8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8"
