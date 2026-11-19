@@ -12,6 +12,12 @@ permissions:
 # docs/github-actions-maintenance.md, "Docs-only pull requests"). The workflow
 # always triggers, so the required `test` check reports on every PR: skipped by
 # its `if` counts as passing, and a failed `changes` job makes it run and fail.
+# A newer push to the same pull request cancels its older run. A run on
+# main, a release or a schedule is never cancelled once it starts.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   changes:
     name: Changes and secret scan
