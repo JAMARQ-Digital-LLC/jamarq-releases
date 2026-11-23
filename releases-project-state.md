@@ -4,6 +4,7 @@ Plan artifact: https://claude.ai/artifact/WJhyryE4zxanuTfKqBk1d5 ("The Releases
 Plan", the owner-facing page for this feed; update it in place, never publish a
 second one). The Vaexcore suite repo and its control center were retired on 14 Nov
 2026 (owner); "The Vaexcore Plan" page is marked retired.
+History: releases-history.md
 
 Working state across sessions for this repo. Durable detail lives in
 `README.md` and `publish/`; this file holds what is true right now. Created 4
@@ -33,6 +34,7 @@ Nov 2026.
 
 ## Current Structural Milestones / Active Feature Goals
 
+- **History moved off the plan page (2026-11-23).** Finished work, the dated ledger and completed setup now live in `releases-history.md`; the plan page's Done tab keeps the last two weeks and links to it (agentic-instructions `docs/project-plan-artifact.md`, "Where history lives").
 - Feeds, checked first-hand 18 Nov 2026 (manifest `version` and `pub_date`):
   Studio 0.1.356 (18 Nov), Pulse 0.2.178 (18 Nov), Vaexbot 0.1.255 (16 Nov),
   Keeplight 0.2.0 (14 Nov), Vaexil Mod Manager 0.2.0 (14 Nov). Both `plain`
