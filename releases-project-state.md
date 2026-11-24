@@ -58,6 +58,8 @@ Nov 2026.
 
 ## Active Task State & Known Regressions
 
+- **CI draft gate (2026-11-24, `[ci-draft-skip-rollout]` in agentic-instructions).** A draft pull request runs only `changes` and its secret scan; the heavy jobs skip until it is marked ready, when `ready_for_review` runs them all. Pushes to `main` and schedules run everything as before.
+
 - **CI light lane (2026-11-23, `[ci-light-lane]` in agentic-instructions).** The `changes` job run on the `jamarq-light` runners (here `ubuntu-latest`, as a public repo); a push to `main` that only changed docs since the last passing commit skips the heavy jobs; every other self-hosted job asks for `jamarq-build` (was `jamarq-win`).
 
 - **ADRs (2026-11-22).** `docs/architecture-decisions.md` holds 3 local

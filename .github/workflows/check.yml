@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   pull_request:
+    # The defaults plus ready_for_review, so marking a draft ready runs the
+    # jobs the draft skipped (docs/github-actions-maintenance.md, agentic-instructions).
+    types: [opened, synchronize, reopened, ready_for_review]
 
 permissions:
   contents: read
@@ -166,7 +169,7 @@ jobs:
   test:
     # Required check: keep the job id `test`.
     needs: changes
-    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.code != 'false') }}
+    if: ${{ !cancelled() && (needs.changes.result != 'success' || (github.event.pull_request.draft != true && needs.changes.outputs.code != 'false')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
