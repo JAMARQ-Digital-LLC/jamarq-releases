@@ -24,6 +24,10 @@ jobs:
     # Not a required check. Public repository: hosted runners only.
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # actions: read lets a push find the last commit this workflow passed on.
+    permissions:
+      contents: read
+      actions: read
     outputs:
       code: ${{ steps.classify.outputs.code }}
     steps:
@@ -38,15 +42,43 @@ jobs:
         env:
           PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
 
-          # Only a pull request can be docs-only.
-          if [[ "${GITHUB_EVENT_NAME}" != "pull_request" ]]; then
-            echo "Event ${GITHUB_EVENT_NAME}: running everything."
+          everything() {
+            echo "$1: running everything."
             echo "code=true" >> "${GITHUB_OUTPUT}"
             exit 0
-          fi
+          }
+
+          case "${GITHUB_EVENT_NAME}" in
+            pull_request)
+              base="$(git merge-base "${PR_BASE_SHA}" "${PR_HEAD_SHA}")"
+              head="${PR_HEAD_SHA}"
+              ;;
+            push)
+              # A push is docs-only when nothing but documentation changed
+              # since the last commit this workflow passed on, on this branch.
+              # Not github.event.before: a newer push cancels a pending run, so
+              # the commit before this one may never have been tested. A pass
+              # that skipped the heavy jobs counts, because it could only skip
+              # them when everything since the pass before it was docs.
+              workflow_id="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" --jq .workflow_id)" \
+                || everything "Could not read this run"
+              base="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/runs?branch=${GITHUB_REF_NAME}&event=push&status=success&per_page=1" \
+                --jq '.workflow_runs[0].head_sha // empty')" \
+                || everything "Could not read the last passing run"
+              [[ -n "${base}" ]] || everything "No passing run on ${GITHUB_REF_NAME} yet"
+              git merge-base --is-ancestor "${base}" "${GITHUB_SHA}" \
+                || everything "The last passing commit ${base} is not behind this one"
+              echo "Comparing with the last passing commit ${base}."
+              head="${GITHUB_SHA}"
+              ;;
+            *)
+              everything "Event ${GITHUB_EVENT_NAME}"
+              ;;
+          esac
 
           # Documentation is Markdown at the root or under docs/, and the
           # licence. Nothing in publish/ or the workflows reads them.
@@ -60,9 +92,8 @@ jobs:
             esac
           }
 
-          base="$(git merge-base "${PR_BASE_SHA}" "${PR_HEAD_SHA}")"
           # --no-renames lists both sides of a rename.
-          files="$(git diff --name-only --no-renames "${base}" "${PR_HEAD_SHA}")"
+          files="$(git diff --name-only --no-renames "${base}" "${head}")"
 
           code=false
           count=0

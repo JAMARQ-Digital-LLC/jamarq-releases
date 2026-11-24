@@ -21,7 +21,7 @@
 #   - Branch protection on the default branch with >=1 required status check
 #     (the repo's own CI job), no required review, enforce_admins:false.
 #
-# Runs on the org's jamarq-win pool, which is free where hosted minutes are
+# Runs on the org's jamarq-build pool, which is free where hosted minutes are
 # not. A PUBLIC repository must change runs-on to ubuntu-latest: the pool's
 # runner group refuses public repositories, and a fork PR must never reach the
 # runner VM (docs/runner-fleet-windows-migration.md, "Do Not").
