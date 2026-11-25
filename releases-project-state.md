@@ -52,12 +52,13 @@ Nov 2026.
   constant names `jmars319`.
 - Release cadence (decision log 2026-11-18): Studio, Pulse and Vaexbot release
   nightly until each has its `main-build.yml`, then only on a dispatch the owner
-  asks for. None has `main-build.yml` yet (18 Nov). The three Slint apps
+  asks for. All three have `main-build.yml` now, dispatch-only (checked 24 Nov). The three Slint apps
   publish only when the owner publishes a reviewed draft.
 - Vaexbot moved to Tauri on 2 Nov: it publishes a signed `latest.json`.
 
 ## Active Task State & Known Regressions
 
+- **Danger list (2026-11-24, fleet sweep):** `AGENTS.md` (new, with the one-line `CLAUDE.md`) now has a "Danger list" section naming this repo's production hazards, written from its own files and checked against `main` (PROC-56, agentic-instructions `fleet-repo-baseline-findings`). Update it when deploy, data or verify paths change.
 - **Repo baseline ignores (2026-11-24, fleet sweep):** `.claude/worktrees/` is ignored by the repo's own `.gitignore`, so `scripts/repo-baseline-check.mjs` in agentic-instructions reports none of these for this repo (`fleet-repo-baseline-findings`). The danger list and ESLint findings, where this repo has them, stay queued there.
 - **Node 26.13.1 (2026-11-24, `[node-lts-move]` in agentic-instructions).** `check.yml` sets up Node 26.13.1 (was 24). Node 22 reaches end of life on 2027-04-30.
 - **CI draft gate (2026-11-24, `[ci-draft-skip-rollout]` in agentic-instructions).** A draft pull request runs only `changes` and its secret scan; the heavy jobs skip until it is marked ready, when `ready_for_review` runs them all. Pushes to `main` and schedules run everything as before.
