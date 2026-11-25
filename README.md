@@ -8,9 +8,9 @@ old name, so copies installed before the rename keep updating; each app's next
 build reads the new address.
 
 Nothing here is published by hand. Each app's repository publishes through the
-action in [`publish/`](publish): the Vaexcore apps on every change to `main`
-that passes CI, and Modlist Launcher, Keeplight and Vaexil Mod Manager when a
-reviewed draft release is published.
+action in [`publish/`](publish): the Vaexcore apps only when the owner asks for
+a release and its `main-build.yml` is run by hand, and Modlist Launcher,
+Keeplight and Vaexil Mod Manager when a reviewed draft release is published.
 
 ## Apps
 
