@@ -58,6 +58,7 @@ Nov 2026.
 
 ## Active Task State & Known Regressions
 
+- **Repo baseline ignores (2026-11-24, fleet sweep):** `.claude/worktrees/` is ignored by the repo's own `.gitignore`, so `scripts/repo-baseline-check.mjs` in agentic-instructions reports none of these for this repo (`fleet-repo-baseline-findings`). The danger list and ESLint findings, where this repo has them, stay queued there.
 - **Node 26.13.1 (2026-11-24, `[node-lts-move]` in agentic-instructions).** `check.yml` sets up Node 26.13.1 (was 24). Node 22 reaches end of life on 2027-04-30.
 - **CI draft gate (2026-11-24, `[ci-draft-skip-rollout]` in agentic-instructions).** A draft pull request runs only `changes` and its secret scan; the heavy jobs skip until it is marked ready, when `ready_for_review` runs them all. Pushes to `main` and schedules run everything as before.
 

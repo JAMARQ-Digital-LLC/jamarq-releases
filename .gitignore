@@ -33,3 +33,6 @@ node_modules/
 out/
 dist/
 build/
+
+# Agent worktrees (agentic-instructions docs/pr-workflow.md, Worktrees)
+.claude/worktrees/
