@@ -22,9 +22,9 @@ Nov 2026.
   GPL-3.0) use kind `plain` (`release.json` with url and sha256), published
   by each repo's `publish-feed.yml` when a reviewed draft release is
   published. Modlist Launcher and Keeplight have no updater and only say when
-  a newer release is out; Vaexil Mod Manager, from 0.2.0, downloads, checks
-  and silently runs the installer its `release.json` names once the user
-  confirms.
+  a newer release is out (README); Vaexil Mod Manager, from 0.2.0, downloads,
+  checks and silently runs the installer its `release.json` names once the
+  user confirms.
 - `<app>-v<version>` releases hold one installer and its manifest, newest ten
   kept per app; `<app>-latest` holds only the current manifest, replaced last.
 - Verify, as Check runs it: `node --test publish/feed.test.mjs`,
@@ -87,10 +87,9 @@ Nov 2026.
 - `vaexbot-latest/latest.yml` (the Electron feed) stays frozen at 0.1.197
   (17 Oct). `console-latest/latest.yml` stays frozen on the last build
   mirrored before the mirror stopped on 2026-10-05 (README, ADR-003); its
-  version is not recorded here. Both by default, documented in the README.
-  Their URL names
-  `JAMARQ-Digital-LLC/vaexcore-releases`, which still redirects (200 after two
-  redirects, 18 Nov).
+  version is not recorded here. Both stay frozen by default, as documented in
+  the README; their URLs name `JAMARQ-Digital-LLC/vaexcore-releases`, which
+  still redirects (200 after two redirects, 18 Nov).
 - 14 Nov 2026: the suite control center is out of `APP_INFO`. Its 11
   `suite-*` releases are kept by owner decision (14 Nov); nothing publishes to
   them, and `vaexcore-suite` is archived.

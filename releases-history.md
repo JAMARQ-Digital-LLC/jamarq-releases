@@ -12,7 +12,7 @@ entry's "now", "still" or "not yet" means as of its own date. PR references rech
 
 2026-11-28
 
-State file corrected against the README and ADR-003 (docs-against-code check): Vaexil Mod Manager has an updater from 0.2.0, and `console-latest` is frozen on the last build mirrored by 2026-10-05, not 0.1.197.
+State file corrected against the README and ADR-003 (docs-against-code check): Vaexil Mod Manager has an updater from 0.2.0, and `console-latest` is frozen on the last build mirrored by 2026-10-05, not 0.1.197 (#32).
 
 2026-11-18
 
